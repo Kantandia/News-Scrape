@@ -35,3 +35,15 @@ router.get('/scraper', (req,res) =>  {
       res.redirect('/articles')
     })
   })
+
+
+
+  router.get('/articles', (req,res) =>  {
+    Article.find({}).sort({_id: 1}).limit(20)
+      .populate('comments')
+      .then(data => {
+        var hbsObject = {articles: data}
+        res.render('home', hbsObject)
+      })
+      .catch(err => res.json(err))
+  })

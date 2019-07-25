@@ -10,3 +10,8 @@ const article = require('../models/article.js')
 router.get('/', (req,res) =>  {
   res.render('scrape')
 })
+
+
+router.get('/scraper', (req,res) =>  {
+    request('https://cleaningtheglass.com/articles/', (error, response, html) =>  { 
+    const $ = cheerio.load(html);

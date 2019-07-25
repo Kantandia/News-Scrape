@@ -28,7 +28,7 @@ router.get('/scraper', (req,res) =>  {
         article.image = x.find('img').attr('src').trim()
   
         console.log(article);
-        Article.create(article)
+        article.create(article)
           .then((data) => console.log(data))
           .catch((err) => res.json(err))
       })
@@ -39,7 +39,7 @@ router.get('/scraper', (req,res) =>  {
 
 
   router.get('/articles', (req,res) =>  {
-    Article.find({}).sort({_id: 1}).limit(20)
+    article.find({}).sort({_id: 1}).limit(20)
       .populate('comments')
       .then(data => {
         var hbsObject = {articles: data}
@@ -47,3 +47,11 @@ router.get('/scraper', (req,res) =>  {
       })
       .catch(err => res.json(err))
   })
+
+
+  router.post("/articles/:id", function(req, res) {
+    comments.create(req.body)
+      .then(comment => Article.findOneAndUpdate({ _id: req.params.id }, { $push: { comments: comment }}, { new: true }))
+      .then(() => res.redirect('/articles'))
+      .catch(err => res.json(err))
+  });

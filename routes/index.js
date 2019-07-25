@@ -55,3 +55,16 @@ router.get('/scraper', (req,res) =>  {
       .then(() => res.redirect('/articles'))
       .catch(err => res.json(err))
   });
+
+
+  router.get("/comments/:id", function(req, res) {
+    // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
+    article.findOne({_id: req.params.id})
+      // ..and populate all of the notes associated with it
+      .populate("comments")
+      .then(function(article) {
+        // If we were able to successfully find an Article with the given id, send it back to the client
+        let comments = article.comments
+        var hbsObject = {message: comments}
+        res.render('message', hbsObject);
+      })
